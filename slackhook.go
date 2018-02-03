@@ -60,7 +60,7 @@ func (a *Attachment) SetTS(t time.Time) {
 
 // NowTS sets the attachment timestamp with the current time.
 func (a *Attachment) NowTS() {
-	a.Timestamp = int(time.Now().UnixNano())
+	a.Timestamp = int(time.Now().Unix())
 
 }
 
