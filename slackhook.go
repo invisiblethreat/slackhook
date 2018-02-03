@@ -1,4 +1,4 @@
-package slackhook
+package main
 
 import (
 	"bytes"
@@ -36,8 +36,8 @@ type Attachment struct {
 	Fields     []Field `json:"fields,omitempty"`
 	ImageURL   string  `json:"image_url,omitempty"`
 	ThumbURL   string  `json:"thumb_url,omitempty"`
-	FooterIcon string  `json:"footer,omitempty"`
-	Footer     string  `json:"footer_icon,omitempty"`
+	Footer     string  `json:"footer,omitempty"`
+	FooterIcon string  `json:"footer_icon,omitempty"`
 	Timestamp  int     `json:"ts,omitempty"` // Unix timestamp
 }
 
@@ -53,15 +53,19 @@ func (m *Message) Attach(a *Attachment) {
 	m.Attachments = append(m.Attachments, a)
 }
 
-// SetTS allow for setting of an arbitrary timestamp
-func (a *Attachment) SetTS(t time.Time) {
+// TSSet allow for setting of an arbitrary timestamp
+func (a *Attachment) TSSet(t time.Time) {
 	a.Timestamp = int(t.Unix())
 }
 
-// NowTS sets the attachment timestamp with the current time.
-func (a *Attachment) NowTS() {
+// TSNow sets the attachment timestamp with the current time.
+func (a *Attachment) TSNow() {
 	a.Timestamp = int(time.Now().Unix())
+}
 
+// AddField attaches a new Field strcut to an attachemnt
+func (a *Attachment) AddField(f Field) {
+	a.Fields = append(a.Fields, f)
 }
 
 // Poster interface is the methods of http.Client required by Client to ease
@@ -76,9 +80,24 @@ type Client struct {
 	HTTPClient Poster
 }
 
-// New Slack Incoming WebHook Client using http.DefaultClient for its Poster.
-func New(url string) *Client {
+// NewHook Slack Incoming WebHook Client using http.DefaultClient for its Poster.
+func NewHook(url string) *Client {
 	return &Client{url: url, HTTPClient: http.DefaultClient}
+}
+
+// NewAttachmentGood is a courtesy feature for a good attachment
+func NewAttachmentGood() *Attachment {
+	return &Attachment{Color: "good"}
+}
+
+// NewAttachmentWarning is a courtesy feature for a warning attachment
+func NewAttachmentWarning() *Attachment {
+	return &Attachment{Color: "warning"}
+}
+
+// NewAttachmentDanger is a courtesy feature for a danger attachment
+func NewAttachmentDanger() *Attachment {
+	return &Attachment{Color: "danger"}
 }
 
 // Simple text message.
