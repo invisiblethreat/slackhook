@@ -55,7 +55,7 @@ func (m *Message) Attach(a *Attachment) {
 
 // SetTS allow for setting of an arbitrary timestamp
 func (a *Attachment) SetTS(t time.Time) {
-	a.Timestamp = t.Nanosecond()
+	a.Timestamp = t.Second()
 }
 
 // NowTS sets the attachment timestamp with the current time.
